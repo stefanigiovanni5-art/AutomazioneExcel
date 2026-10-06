@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from datetime import datetime
@@ -18,7 +19,17 @@ from openpyxl.utils import get_column_letter
 # ============================================================
 
 APP_NAME = "Smart Sales Report"
-VERSION = "3.0"
+VERSION = "4.0"
+LOG_FILE = Path(__file__).resolve().parent / "smart_sales_report.log"
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    encoding="utf-8",
+)
+
+logger = logging.getLogger(__name__)
 
 COLORE_PRINCIPALE = "1F4E78"
 COLORE_SECONDARIO = "4472C4"
@@ -1522,6 +1533,8 @@ def apri_report(percorso):
 
 def main():
 
+    logger.info("Avvio Smart Sales Report versione %s", VERSION)
+    
     print(
         "=" * 65
     )
@@ -1562,6 +1575,8 @@ def main():
         print(
             "\nCaricamento dati..."
         )
+
+        logger.info("File selezionato: %s", percorso)
 
         df_originale = carica_dati(
             percorso
@@ -1756,6 +1771,8 @@ def main():
 
     except Exception as errore:
 
+        logger.exception("Errore durante l'elaborazione: %s", errore)
+        
         print(
             "\nERRORE DURANTE "
             "L'ELABORAZIONE:"
