@@ -16,3 +16,7 @@ venv/
 # Impostazioni VS Code
 .vscode/
 smart_sales_report.log
+# PyInstaller
+build/
+dist/
+*.spec
