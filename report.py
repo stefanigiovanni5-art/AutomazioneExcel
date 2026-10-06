@@ -313,6 +313,40 @@ def riconosci_colonne(df):
 # ANALISI VENDITE
 # ============================================================
 
+def converti_numero(valore):
+    if pd.isna(valore):
+        return None
+
+    if isinstance(valore, (int, float)):
+        return valore
+
+    testo = str(valore).strip()
+
+    # Rimuove simboli e spazi comuni
+    testo = (
+        testo.replace("€", "")
+        .replace("$", "")
+        .replace("£", "")
+        .replace(" ", "")
+    )
+
+    # Formato europeo: 1.250,50
+    if "," in testo and "." in testo:
+        if testo.rfind(",") > testo.rfind("."):
+            testo = testo.replace(".", "")
+            testo = testo.replace(",", ".")
+        else:
+            testo = testo.replace(",", "")
+
+    # Formato europeo semplice: 49,90
+    elif "," in testo:
+        testo = testo.replace(",", ".")
+
+    try:
+        return float(testo)
+    except (ValueError, TypeError):
+        return None
+
 def analizza_vendite(df):
 
     df = df.copy()
@@ -337,15 +371,8 @@ def analizza_vendite(df):
         return df, analisi
 
     # Converte quantità e prezzo in numeri
-    df[quantita] = pd.to_numeric(
-        df[quantita],
-        errors="coerce"
-    )
-
-    df[prezzo] = pd.to_numeric(
-        df[prezzo],
-        errors="coerce"
-    )
+    df[quantita] = df[quantita].apply(converti_numero)
+    df[prezzo] = df[prezzo].apply(converti_numero)
 
     # Calcolo fatturato
     df["Fatturato"] = (
