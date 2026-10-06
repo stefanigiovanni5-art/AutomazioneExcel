@@ -659,78 +659,59 @@ def crea_dashboard(workbook, analisi):
     ws["G8"].font = Font(bold=True)
     ws["G8"].alignment = Alignment(horizontal="center")
 
-    prodotti = analisi["prodotti"].head(10)
-    if not prodotti.empty:
-        start = 45
-        nome_col = prodotti.columns[0]
-        ws.cell(start, 1, nome_col)
-        ws.cell(start, 2, "Fatturato")
-        for n, (_, riga) in enumerate(prodotti.iterrows(), start=start + 1):
-            ws.cell(n, 1, str(riga[nome_col]))
-            ws.cell(n, 2, float(riga["Fatturato"]))
+    # I grafici della Dashboard puntano direttamente ai fogli di analisi.
+    # Questo evita problemi di visualizzazione in Excel causati da sorgenti
+    # dati collocate in righe nascoste nello stesso foglio Dashboard.
+    if "Vendite per Prodotto" in workbook.sheetnames:
+        ws_prodotti = workbook["Vendite per Prodotto"]
+        if ws_prodotti.max_row >= 2:
+            max_row = min(ws_prodotti.max_row, 11)
+            grafico = BarChart()
+            grafico.type = "col"
+            grafico.style = 10
+            grafico.title = "Top 10 prodotti per fatturato"
+            grafico.y_axis.title = "Fatturato (€)"
+            grafico.height = 10
+            grafico.width = 16
+            dati = Reference(ws_prodotti, min_col=3, min_row=1, max_row=max_row)
+            categorie = Reference(ws_prodotti, min_col=1, min_row=2, max_row=max_row)
+            grafico.add_data(dati, titles_from_data=True)
+            grafico.set_categories(categorie)
+            grafico.legend = None
+            ws.add_chart(grafico, "A10")
 
-        grafico = BarChart()
-        grafico.type = "col"
-        grafico.style = 10
-        grafico.title = "Top 10 prodotti per fatturato"
-        grafico.y_axis.title = "Fatturato (€)"
-        grafico.height = 10
-        grafico.width = 16
-        dati = Reference(ws, min_col=2, min_row=start, max_row=start + len(prodotti))
-        categorie = Reference(ws, min_col=1, min_row=start + 1, max_row=start + len(prodotti))
-        grafico.add_data(dati, titles_from_data=True)
-        grafico.set_categories(categorie)
-        grafico.legend = None
-        ws.add_chart(grafico, "A10")
+    if "Vendite per Categoria" in workbook.sheetnames:
+        ws_categorie = workbook["Vendite per Categoria"]
+        if ws_categorie.max_row >= 2:
+            max_row = min(ws_categorie.max_row, 9)
+            grafico = PieChart()
+            grafico.title = "Distribuzione fatturato per categoria"
+            grafico.height = 10
+            grafico.width = 14
+            dati = Reference(ws_categorie, min_col=3, min_row=1, max_row=max_row)
+            categorie = Reference(ws_categorie, min_col=1, min_row=2, max_row=max_row)
+            grafico.add_data(dati, titles_from_data=True)
+            grafico.set_categories(categorie)
+            grafico.dataLabels = DataLabelList()
+            grafico.dataLabels.showPercent = True
+            grafico.dataLabels.showLeaderLines = True
+            ws.add_chart(grafico, "G10")
 
-    categorie_df = analisi["categorie"].head(8)
-    if not categorie_df.empty:
-        start = 45
-        nome_col = categorie_df.columns[0]
-        ws.cell(start, 4, nome_col)
-        ws.cell(start, 5, "Fatturato")
-        for n, (_, riga) in enumerate(categorie_df.iterrows(), start=start + 1):
-            ws.cell(n, 4, str(riga[nome_col]))
-            ws.cell(n, 5, float(riga["Fatturato"]))
-
-        grafico = PieChart()
-        grafico.title = "Distribuzione fatturato per categoria"
-        grafico.height = 10
-        grafico.width = 14
-        dati = Reference(ws, min_col=5, min_row=start, max_row=start + len(categorie_df))
-        categorie = Reference(ws, min_col=4, min_row=start + 1, max_row=start + len(categorie_df))
-        grafico.add_data(dati, titles_from_data=True)
-        grafico.set_categories(categorie)
-        grafico.dataLabels = DataLabelList()
-        grafico.dataLabels.showPercent = True
-        grafico.dataLabels.showLeaderLines = True
-        ws.add_chart(grafico, "G10")
-
-    temporale = analisi["temporale"]
-    if not temporale.empty:
-        start = 45
-        ws.cell(start, 7, "Mese")
-        ws.cell(start, 8, "Fatturato")
-        for n, (_, riga) in enumerate(temporale.iterrows(), start=start + 1):
-            ws.cell(n, 7, riga["Mese"].to_pydatetime() if hasattr(riga["Mese"], "to_pydatetime") else riga["Mese"])
-            ws.cell(n, 8, float(riga["Fatturato"]))
-            ws.cell(n, 7).number_format = "mmm yyyy"
-
-        grafico = LineChart()
-        grafico.title = "Andamento mensile del fatturato"
-        grafico.y_axis.title = "Fatturato (€)"
-        grafico.x_axis.title = "Mese"
-        grafico.height = 9
-        grafico.width = 22
-        dati = Reference(ws, min_col=8, min_row=start, max_row=start + len(temporale))
-        date = Reference(ws, min_col=7, min_row=start + 1, max_row=start + len(temporale))
-        grafico.add_data(dati, titles_from_data=True)
-        grafico.set_categories(date)
-        grafico.legend = None
-        ws.add_chart(grafico, "A29")
-
-    for riga in range(45, 200):
-        ws.row_dimensions[riga].hidden = True
+    if "Andamento Mensile" in workbook.sheetnames:
+        ws_temporale = workbook["Andamento Mensile"]
+        if ws_temporale.max_row >= 2:
+            grafico = LineChart()
+            grafico.title = "Andamento mensile del fatturato"
+            grafico.y_axis.title = "Fatturato (€)"
+            grafico.x_axis.title = "Mese"
+            grafico.height = 9
+            grafico.width = 22
+            dati = Reference(ws_temporale, min_col=2, min_row=1, max_row=ws_temporale.max_row)
+            date = Reference(ws_temporale, min_col=1, min_row=2, max_row=ws_temporale.max_row)
+            grafico.add_data(dati, titles_from_data=True)
+            grafico.set_categories(date)
+            grafico.legend = None
+            ws.add_chart(grafico, "A29")
 
     for colonna in range(1, 13):
         ws.column_dimensions[get_column_letter(colonna)].width = 13
