@@ -1,52 +1,166 @@
-# Smart Sales Report
+# Smart Sales Report — V4.5 PRO
 
-Smart Sales Report è un'applicazione Python progettata per automatizzare l'analisi dei dati di vendita e la creazione di report Excel professionali.
+Smart Sales Report è un'applicazione Python per l'automazione dell'analisi dei dati di vendita e la generazione di report Excel professionali.
 
-Il programma importa file CSV o Excel, controlla e pulisce i dati, calcola automaticamente i principali KPI aziendali e genera un report Excel completo con dashboard, statistiche e grafici.
+Il programma importa dati commerciali da file CSV o Excel, esegue automaticamente operazioni di pulizia e validazione, riconosce le principali colonne di vendita, calcola KPI aziendali e genera un report Excel completo con dashboard, grafici, analisi temporali e controlli sulla qualità dei dati.
 
-## Funzionalità
+L'obiettivo del progetto è trasformare rapidamente dati di vendita grezzi in informazioni chiare e utilizzabili per il processo decisionale.
 
-- Importazione di file CSV e XLSX
-- Pulizia e validazione automatica dei dati
+---
+
+## Funzionalità principali
+
+### Importazione e preparazione dati
+
+- Importazione di file CSV
+- Importazione di file Excel XLSX e XLSM
+- Rilevamento automatico della codifica dei CSV
+- Pulizia automatica dei dati
+- Eliminazione delle righe e colonne completamente vuote
 - Rimozione dei record duplicati
-- Analisi dei valori mancanti
-- Riconoscimento delle colonne necessarie all'analisi
-- Calcolo automatico del fatturato
-- Calcolo dei principali KPI di vendita
-- Analisi delle vendite per prodotto
-- Analisi delle vendite per categoria
-- Creazione automatica di una dashboard Excel
-- Generazione automatica di grafici
-- Statistiche descrittive
-- Controllo della qualità dei dati
-- Esportazione del report finale in formato XLSX
-- Apertura automatica del report generato
+- Normalizzazione delle intestazioni
+- Gestione dei valori mancanti
+- Riconoscimento automatico delle principali colonne commerciali
 
-## KPI calcolati
+### Gestione intelligente dei valori numerici
 
-Il programma calcola automaticamente:
+Smart Sales Report gestisce diversi formati numerici comunemente presenti nei file aziendali, inclusi:
+
+- formati europei
+- formati internazionali
+- separatori decimali
+- separatori delle migliaia
+- simboli di valuta
+- valori negativi
+
+Questo permette di elaborare file provenienti da fonti differenti riducendo la necessità di correzioni manuali.
+
+### Analisi delle vendite
+
+Il programma può analizzare automaticamente:
+
+- fatturato
+- quantità vendute
+- numero di operazioni
+- valore medio delle operazioni
+- performance dei prodotti
+- performance delle categorie
+- performance dei clienti
+- andamento temporale delle vendite
+
+### Controllo qualità
+
+Il sistema identifica e segnala dati potenzialmente problematici, tra cui:
+
+- quantità non valide
+- prezzi non validi
+- valori mancanti
+- quantità negative
+- prezzi negativi
+- date mancanti o non riconosciute
+
+Le righe problematiche possono essere riportate separatamente nel foglio `Anomalie`.
+
+---
+
+## KPI
+
+Quando le colonne necessarie sono disponibili, Smart Sales Report calcola automaticamente KPI come:
 
 - Fatturato totale
 - Quantità totale venduta
-- Numero di operazioni
+- Numero di operazioni valide
 - Valore medio per operazione
 - Prodotto con il maggior fatturato
+- Categoria con il maggior fatturato
+- Numero di clienti unici
+- Prima vendita rilevata
+- Ultima vendita rilevata
+- Variazione percentuale dell'ultimo mese disponibile
+
+I KPI vengono calcolati utilizzando le righe considerate valide per l'analisi.
+
+---
+
+## Dashboard Excel
+
+Il report genera automaticamente una dashboard progettata per offrire una panoramica immediata delle performance commerciali.
+
+La dashboard può includere:
+
+- KPI principali
+- Top prodotto
+- Top categoria
+- Top prodotti per fatturato
+- Distribuzione del fatturato per categoria
+- Andamento mensile del fatturato
+
+I grafici vengono generati direttamente nel file Excel tramite OpenPyXL.
+
+---
 
 ## Report generato
 
-Il file Excel prodotto contiene diversi fogli dedicati all'analisi:
+A seconda delle informazioni disponibili nel dataset, il report Excel può contenere i seguenti fogli:
 
-- Dashboard
-- Dati Puliti
-- Statistiche
-- Qualità Dati
-- Informazioni
-- Vendite per Prodotto
-- Vendite per Categoria
+- `Dashboard`
+- `Dati Puliti`
+- `Statistiche`
+- `Qualita Dati`
+- `Informazioni`
+- `Vendite per Prodotto`
+- `Vendite per Categoria`
+- `Vendite per Cliente`
+- `Andamento Mensile`
+- `Anomalie`
 
-La dashboard include grafici per facilitare la lettura dei risultati e l'individuazione dei prodotti e delle categorie con il maggiore fatturato.
+Alcuni fogli vengono creati solamente quando nel file sorgente sono presenti le colonne necessarie.
 
-## Tecnologie utilizzate
+---
+
+## Riconoscimento automatico delle colonne
+
+Il programma cerca di identificare automaticamente colonne equivalenti anche quando utilizzano denominazioni differenti.
+
+Ad esempio, può riconoscere varianti relative a:
+
+- quantità
+- prezzo
+- prodotto
+- categoria
+- data
+- cliente
+
+Questo rende l'applicazione più flessibile nell'elaborazione di file provenienti da aziende o sistemi differenti.
+
+---
+
+## Logging e gestione degli errori
+
+Smart Sales Report include un sistema di logging che registra informazioni utili sull'esecuzione del programma.
+
+Il file locale:
+
+`smart_sales_report.log`
+
+può essere utilizzato per diagnosticare eventuali problemi durante l'elaborazione.
+
+Il log è escluso dal repository Git tramite `.gitignore`.
+
+Sono inoltre gestiti errori comuni come:
+
+- file vuoti
+- formati non supportati
+- problemi di lettura
+- impossibilità di scrivere il report
+- file Excel già aperti
+- errori durante l'elaborazione
+
+---
+
+## Tecnologie
+
+Il progetto utilizza:
 
 - Python
 - Pandas
@@ -56,6 +170,8 @@ La dashboard include grafici per facilitare la lettura dei risultati e l'individ
 - Git
 - GitHub
 
+---
+
 ## Installazione
 
 Clonare il repository:
@@ -64,7 +180,7 @@ Clonare il repository:
 git clone https://github.com/stefanigiovanni5-art/AutomazioneExcel.git
 ```
 
-Entrare nella cartella del progetto:
+Entrare nella cartella:
 
 ```bash
 cd AutomazioneExcel
@@ -76,17 +192,30 @@ Installare le dipendenze:
 python -m pip install -r requirements.txt
 ```
 
+---
+
 ## Utilizzo
 
-Avviare il programma con:
+Avviare l'applicazione:
 
 ```bash
 python report.py
 ```
 
-Selezionare il file di vendita da analizzare quando richiesto dal programma.
+Si aprirà una finestra per selezionare il file da analizzare.
 
-Al termine dell'elaborazione verrà generato automaticamente il report Excel con i risultati dell'analisi.
+Dopo la selezione, Smart Sales Report:
+
+1. importa i dati;
+2. esegue la pulizia;
+3. riconosce le colonne disponibili;
+4. converte e valida i valori;
+5. calcola le analisi disponibili;
+6. genera il report Excel;
+7. salva il risultato nella cartella `output`;
+8. apre automaticamente il report su Windows.
+
+---
 
 ## Struttura del progetto
 
@@ -96,26 +225,73 @@ AutomazioneExcel/
 ├── requirements.txt
 ├── vendite.csv
 ├── README.md
-└── .gitignore
+├── .gitignore
+└── output/
 ```
 
-`vendite.csv` contiene dati dimostrativi utilizzabili per provare il programma.
+`vendite.csv` contiene dati dimostrativi utilizzabili per testare il progetto.
 
-## Privacy dei dati
+La cartella `output` contiene i report generati localmente.
+
+---
+
+## Privacy e dati aziendali
 
 I dati reali dei clienti non devono essere pubblicati nel repository.
 
-Prima di utilizzare il progetto con dati aziendali reali, verificare che file contenenti informazioni riservate, personali o commercialmente sensibili siano esclusi dal controllo versione.
+File contenenti informazioni personali, commerciali, finanziarie o comunque riservate devono essere mantenuti fuori dal controllo versione.
 
-## Possibili sviluppi futuri
+Il dataset incluso nel repository deve essere utilizzato esclusivamente come dataset dimostrativo e non deve contenere informazioni riservate di clienti reali.
 
-- Supporto a ulteriori formati di dati
-- Dashboard più avanzate
-- Analisi temporali delle vendite
-- Filtri e configurazioni personalizzabili
-- Generazione di ulteriori KPI
-- Miglioramento dell'interfaccia grafica
+---
+
+## Stato del progetto
+
+**Versione attuale: V4.5 PRO**
+
+Il progetto dispone attualmente di:
+
+- motore automatico di pulizia dati
+- analisi delle vendite
+- controllo qualità
+- rilevamento delle anomalie
+- analisi per prodotto
+- analisi per categoria
+- analisi per cliente
+- analisi temporale
+- dashboard Excel
+- generazione automatica di grafici
+- logging
+- gestione degli errori
+
+---
+
+## Sviluppi futuri
+
+Possibili evoluzioni:
+
+- interfaccia grafica completa
+- configurazione personalizzata delle colonne
+- confronto tra periodi
+- ulteriori KPI commerciali
+- filtri configurabili
+- esportazione PDF
+- supporto a database
+- elaborazione di più file contemporaneamente
+- packaging come applicazione Windows
+- test automatici
+- configurazioni personalizzate per diversi clienti
+
+---
 
 ## Autore
 
-Progetto sviluppato come soluzione Python per l'automazione dell'analisi delle vendite e della reportistica Excel.
+Sviluppato da **Giovanni Stefani**
+
+Progetto Python dedicato all'automazione dell'analisi delle vendite, della pulizia dei dati e della reportistica Excel.
+
+---
+
+## Licenza
+
+Il progetto non include attualmente una licenza open source esplicita.
