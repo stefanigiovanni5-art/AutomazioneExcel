@@ -7,6 +7,9 @@ Il programma importa dati commerciali da file CSV o Excel, esegue automaticament
 L'obiettivo del progetto è trasformare rapidamente dati di vendita grezzi in informazioni chiare e utilizzabili per il processo decisionale.
 
 ---
+## 📊 Dashboard
+
+![Dashboard Smart Sales Report](docs/dashboard.png)
 
 ## Funzionalità principali
 
