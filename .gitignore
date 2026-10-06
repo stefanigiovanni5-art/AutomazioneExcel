@@ -1,0 +1,17 @@
+# File generati dal programma
+output/
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Ambienti virtuali
+.venv/
+venv/
+
+# File temporanei
+*.tmp
+~$*.xlsx
+
+# Impostazioni VS Code
+.vscode/
